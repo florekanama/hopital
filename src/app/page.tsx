@@ -34,13 +34,13 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-blue-50 to-white">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b ">
       {/* Header */}
       <header className="py-6 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto flex justify-center">
           <div className="w-48 h-24 relative">
             <Image
-              src="/dgi.png"
+              src="/watu.jpg"
               alt="Databank DGI Logo"
               fill
               className="object-contain"
@@ -59,18 +59,20 @@ export default function HomePage() {
             transition={{ duration: 0.8 }}
             className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6"
           >
-            Bienvenue sur <span className="text-blue-600">Databank DGI</span>
+            Bienvenue sur <span className="text-blue-600">Watu wetu RendezVous</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-lg sm:text-xl text-gray-600 mb-10 max-w-2xl mx-auto"
+            className="text-lg sm:text-xl text-gray-600 mb-6 max-w-2xl mx-auto"
           >
-            La plateforme sécurisée de gestion des declarations des impot sur Employee ,concu par 
-            l'Ir Sandrine en Collaboration avec le Ds TG
+            Le système innovant de gestion des rendez-vous médicaux, conçu pour simplifier la prise de rendez-vous et améliorer l'accès aux soins.
           </motion.p>
+
+         
+
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -78,7 +80,7 @@ export default function HomePage() {
             transition={{ duration: 0.8, delay: 0.4 }}
           >
             <Link
-              href="/login"
+              href="/dashboard"
               onClick={handleNavigation}
               className="inline-flex items-center justify-center px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-full shadow-lg transition-all duration-300 min-w-[220px]"
             >
@@ -90,7 +92,7 @@ export default function HomePage() {
                   whileTap={{ scale: 0.95 }}
                   className="flex items-center"
                 >
-                  <span className="mr-3">Accéder à l'espace sécurisé</span>
+                  <span className="mr-3">Accéder à la plateforme</span>
                   <FiArrowRight className="w-5 h-5" />
                 </motion.span>
               )}
@@ -120,7 +122,8 @@ export default function HomePage() {
           transition={{ duration: 1, delay: 1 }}
           className="text-sm text-gray-500"
         >
-          © {new Date().getFullYear()} Databank DGI - Tous droits réservés
+          <p>Système conçu par l'iR Flore KANAMA</p>
+          <p className="mt-1">En collaboration avec le DS TG</p>
         </motion.div>
       </footer>
     </div>

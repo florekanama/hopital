@@ -14,7 +14,7 @@ const nextConfig = {
   },
   images: {
     domains: [
-      'jvfgrhhasvbauoxaazex.supabase.co', // Votre domaine Supabase
+      'ujswkxqlkeyegananzqn.supabase.co', // Votre domaine Supabase
       'lh3.googleusercontent.com' // Exemple d'autre domaine que vous pourriez utiliser
     ],
   },

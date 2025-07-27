@@ -32,22 +32,9 @@ export default function MedecinDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-900">Tableau de bord Médecin</h1>
-          <div className="flex items-center space-x-4">
-            <span className="text-gray-600">Bonjour, Dr. {user?.nom}</span>
-            <button
-              onClick={signOut}
-              className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700"
-            >
-              Déconnexion
-            </button>
-          </div>
-        </div>
-      </header>
       
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      
+      <main className="max-w-7xl mx-auto ">
         <div className="px-4 py-6 sm:px-0">
           <div className="bg-white shadow overflow-hidden sm:rounded-lg">
             <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
