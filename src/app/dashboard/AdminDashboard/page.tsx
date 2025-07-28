@@ -1,4 +1,6 @@
 
+//   )
+// }
 'use client'
 import { useAuth } from '@/context/AuthContext'
 import { useState, useEffect } from 'react'
@@ -140,11 +142,63 @@ export default function AdminDashboard() {
   useEffect(() => {
     loadUsers()
   }, [])
+  // Fonction pour télécharger les données
+  const downloadData = (format: 'json' | 'csv') => {
+    if (users.length === 0) return
 
+    let content: string
+    let mimeType: string
+    let extension: string
+
+    if (format === 'json') {
+      content = JSON.stringify(users, null, 2)
+      mimeType = 'application/json'
+      extension = 'json'
+    } else {
+      // Convertir en CSV
+      const headers = Object.keys(users[0]).join(',')
+      const rows = users.map(user => 
+        Object.values(user).map(value => 
+          typeof value === 'string' ? `"${value.replace(/"/g, '""')}"` : value
+        ).join(',')
+      )
+      content = [headers, ...rows].join('\n')
+      mimeType = 'text/csv'
+      extension = 'csv'
+    }
+
+    const blob = new Blob([content], { type: mimeType })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `utilisateurs.${extension}`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+  }
   return (
     <div className="min-h-screen ">
     
-      
+      <div className="px-4 py-5 sm:px-6 border-b border-gray-200 flex justify-between items-center">
+  <h3 className="text-lg leading-6 font-medium text-gray-900">
+    Liste des utilisateurs
+  </h3>
+  <div className="flex space-x-2">
+    <button
+      onClick={() => downloadData('json')}
+      className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm"
+    >
+      Télécharger JSON
+    </button>
+    <button
+      onClick={() => downloadData('csv')}
+      className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm"
+    >
+      Télécharger CSV
+    </button>
+  </div>
+</div>
       <main className="max-w-7xl scrollbar-hide mx-auto ">
         <div className="px-4 py-6 sm:px-0 scrollbar-hide">
           <div className="bg-white scrollbar-hide shadow overflow-hidden sm:rounded-lg">
