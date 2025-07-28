@@ -12,6 +12,7 @@
     "@headlessui/react": "^2.2.6",
     "@heroicons/react": "^2.2.0",
     "@next-auth/supabase-adapter": "^0.2.1",
+    "@react-pdf/renderer": "^4.3.0",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.51.0",

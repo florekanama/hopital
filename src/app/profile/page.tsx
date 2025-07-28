@@ -1603,10 +1603,10 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-6xl mx-auto px-2 sm:px-6 lg:px-8 ">
       <div className="bg-white rounded-lg overflow-hidden shadow">
         {/* Header avec fond coloré */}
-        <div className="bg-gradient-to-r rounded-t-lg from-blue-600 to-teal-500 px-6 py-8">
+        <div className="bg-gradient-to-r rounded-3xl from-indigo-600 to-blue-500 px- py-3">
           <div className="flex flex-col sm:flex-row items-center justify-between">
             <h1 className="text-2xl font-bold text-white">Mon Profil</h1>
             <span className="mt-2 sm:mt-0 px-3 py-1 rounded-full text-lg font-medium  text-white">
@@ -1645,7 +1645,7 @@ export default function ProfilePage() {
         )}
 
         {/* Contenu principal */}
-        <div className="px-6 py-8">
+        <div className="px-2 py-8">
           <div className="flex flex-col md:flex-row gap-8">
             {/* Colonne gauche - Photo de profil */}
             <div className="md:w-1/3 flex flex-col items-center">
@@ -1675,7 +1675,7 @@ export default function ProfilePage() {
                     </div>
                   )}
                 </div>
-                <label className="absolute bottom-0 right-0 bg-white p-2 rounded-full shadow-md cursor-pointer group-hover:bg-blue-100 transition-colors">
+                <label className="absolute bottom-0 right-0 bg-white p- rounded-full shadow-md cursor-pointer group-hover:bg-blue-100 transition-colors">
                   <input
                     type="file"
                     accept="image/*"
@@ -1732,7 +1732,7 @@ export default function ProfilePage() {
                         id="nom"
                         value={formData.nom}
                         onChange={handleChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-3 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                         disabled={loading}
                       />
                     </div>
@@ -1750,7 +1750,7 @@ export default function ProfilePage() {
                         id="email"
                         value={formData.email}
                         onChange={handleChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-3 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                         disabled={loading}
                       />
                     </div>
@@ -1761,7 +1761,7 @@ export default function ProfilePage() {
                       <button
                         type="button"
                         onClick={() => router.back()}
-                        className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        className="px-4 py-3 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                         disabled={loading}
                       >
                         Annuler
@@ -1769,7 +1769,7 @@ export default function ProfilePage() {
                       <button
                         type="submit"
                         disabled={loading}
-                        className={`px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
+                        className={`px-4 py-3 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
                           loading ? 'opacity-75 cursor-not-allowed' : ''
                         }`}
                       >

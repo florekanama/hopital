@@ -82,7 +82,7 @@ export default function HomePage() {
             <Link
               href="/dashboard"
               onClick={handleNavigation}
-              className="inline-flex items-center justify-center px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-full shadow-lg transition-all duration-300 min-w-[220px]"
+              className="inline-flex items-center justify-center px-8 py-4 bg-gray-600 hover:bg-blue-700 text-white font-medium rounded-full shadow-lg transition-all duration-300 min-w-[220px]"
             >
               {isLoading ? (
                 <Loader />
@@ -123,7 +123,7 @@ export default function HomePage() {
           className="text-sm text-gray-500"
         >
           <p>Système conçu par l'iR Flore KANAMA</p>
-          <p className="mt-1">En collaboration avec le DS TG</p>
+          <p className="mt-1">En collaboration avec DS - TG</p>
         </motion.div>
       </footer>
     </div>
