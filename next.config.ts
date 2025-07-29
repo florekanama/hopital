@@ -11,10 +11,10 @@
 const nextConfig = {
     eslint: {
     ignoreDuringBuilds: true,
-  },
-  experimental: {
-    esmExternals: 'loose',
-  }
+   }
+  // experimental: {
+  //   esmExternals: 'loose',
+  // }
   ,
   images: {
     domains: [

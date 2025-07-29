@@ -31,46 +31,14 @@ interface MedecinOption {
   specialite: string
 }
 const PDFDownloadButton = dynamic(
-  () => import('@react-pdf/renderer').then((mod) => {
-    const { PDFDownloadLink } = mod;
-    return ({ rendezVous, filters, medecins }: { 
-      rendezVous: RendezVous[], 
-      filters: any, 
-      medecins: MedecinOption[] 
-    }) => (
-      <PDFDownloadLink
-        document={<RendezVousPDF 
-          rendezVous={rendezVous} 
-          filters={filters} 
-          medecins={medecins} 
-        />}
-        fileName={`rendez-vous_${format(new Date(), 'yyyy-MM-dd')}.pdf`}
-        style={{ textDecoration: 'none' }}
-      >
-        {({ loading }) => (
-          <button
-            className={`px-4 py-2 text-white rounded-md transition-colors ${
-              loading ? 'bg-green-500 cursor-wait' : 'bg-green-600 hover:bg-green-700'
-            }`}
-          >
-            {loading ? 'Génération PDF...' : 'Télécharger PDF'}
-          </button>
-        )}
-      </PDFDownloadLink>
-    );
-  }),
+  () => import('@/components/PDFDownloadButton'),
   { 
     ssr: false,
-    loading: () => (
-      <button 
-        disabled
-        className="px-4 py-2 bg-gray-400 text-white rounded-md cursor-not-allowed"
-      >
-        Préparation PDF...
-      </button>
-    )
+    loading: () => <button disabled className="px-4 py-2 bg-gray-400 text-white rounded-md cursor-not-allowed">
+      Préparation PDF...
+    </button>
   }
-);
+)
 
 export default function ListeRendezVous() {
   const [pdfLoading, setPdfLoading] = useState(false)
@@ -263,7 +231,25 @@ export default function ListeRendezVous() {
         return 'bg-gray-100 text-gray-800'
     }
   }
+const updateRdvStatus = async (rdvId: string, present: boolean) => {
+  try {
+    const { error } = await supabase
+      .from('rendez_vous')
+      .update({ 
+        statut: present ? 'terminé' : 'absent',
+        present 
+      })
+      .eq('id', rdvId)
 
+    if (error) throw error
+
+    toast.success('Statut mis à jour avec succès')
+    fetchRendezVous() // Rafraîchir la liste
+  } catch (error: any) {
+    console.error('Erreur lors de la mise à jour:', error)
+    toast.error(`Erreur: ${error.message}`)
+  }
+}
   return (
     <div className="min-h-screen bg-gray-0 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
