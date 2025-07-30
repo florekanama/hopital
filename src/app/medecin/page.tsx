@@ -2788,9 +2788,9 @@ const RDV_STATUS = {
 }
 
 export default function RendezVousMedecin() {
-  const { user, loading: authLoading } = useAuth()
+  const { user} = useAuth()
   const router = useRouter()
-  const [loading, setLoading] = useState(true)
+  // const [loading, setLoading] = useState(true)
   const [rendezVous, setRendezVous] = useState<any[]>([])
   const [selectedPatient, setSelectedPatient] = useState<{id: string, medecinId: string} | null>(null)
   const [medecinId, setMedecinId] = useState<string | null>(null)
@@ -2817,7 +2817,6 @@ export default function RendezVousMedecin() {
 
   const fetchRendezVous = async () => {
     try {
-      setLoading(true)
       
       const medecinId = await fetchMedecinId()
 
@@ -2844,23 +2843,21 @@ export default function RendezVousMedecin() {
     } catch (error: any) {
       console.error('Erreur lors du chargement:', error)
       toast.error(`Erreur: ${error.message}`)
-    } finally {
-      setLoading(false)
+    
     }
   }
 
   useEffect(() => {
-    if (authLoading) return
     if (!user) {
       router.push('/login')
       return
     }
     fetchRendezVous()
-  }, [user, authLoading, router])
+  }, [user,router])
 
   const updateRdvStatus = async (id: string, newStatus: string, present: boolean | null = null) => {
     try {
-      setLoading(true)
+    
       
       const updates: any = { 
         statut: newStatus,
@@ -2887,7 +2884,7 @@ export default function RendezVousMedecin() {
       console.error('Erreur:', error)
       toast.error(`Erreur: ${error.message}`)
     } finally {
-      setLoading(false)
+  
     }
   }
 
@@ -2968,13 +2965,7 @@ export default function RendezVousMedecin() {
     )
   }
 
-  if (authLoading || loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
-      </div>
-    )
-  }
+ 
 
   if (!user) {
     return null

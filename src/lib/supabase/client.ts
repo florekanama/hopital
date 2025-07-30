@@ -10,7 +10,8 @@ const supabaseOptions = {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: true
+     storage: typeof window !== 'undefined' ? localStorage : undefined,
+    detectSessionInUrl: false
   },
   global: {
     headers: { 'x-application-name': 'MonApplication' }

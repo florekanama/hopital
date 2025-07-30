@@ -15,7 +15,7 @@ const nextConfig = {
   // experimental: {
   //   esmExternals: 'loose',
   // }
-  ,
+  ,reactStrictMode: true,
   images: {
     domains: [
       'ujswkxqlkeyegananzqn.supabase.co', // Votre domaine Supabase

@@ -1,4 +1,5 @@
 
+
 // 'use client'
 // import { useState, useEffect } from 'react'
 // import { useAuth } from '@/context/AuthContext'
@@ -35,7 +36,10 @@
 //           .eq('user_id', user.id)
 //           .single()
 
-//         if (error && !error.message.includes('No rows found')) throw error
+//         // "No rows found" est une erreur normale si le patient n'a pas encore de profil
+//         if (error && !error.message.includes('No rows found')) {
+//           throw error
+//         }
 
 //         if (data) {
 //           setFormData({
@@ -46,9 +50,9 @@
 //             antecedents_medicaux: data.antecedents_medicaux || ''
 //           })
 //         }
-//       } catch (error) {
-//         toast.error('Erreur lors du chargement des données')
-//         console.error(error)
+//       } catch (error: any) {
+//         console.error('Erreur lors du chargement:', error)
+//         toast.error(`Erreur lors du chargement des données: ${error.message}`)
 //       } finally {
 //         setLoading(false)
 //       }
@@ -68,45 +72,50 @@
 
 //     try {
 //       if (!user) {
-//         throw new Error('Utilisateur non connecté')
+//         toast.error('Vous devez être connecté')
+//         return
 //       }
 
-//       // Formatage des données pour la base de données
-//       const dataToSave = {
-//         ...formData,
+//       // Préparer les données pour la base de données
+//       const patientData = {
 //         user_id: user.id,
-//         date_naissance: formData.date_naissance || null
+//         sexe: formData.sexe,
+//         date_naissance: formData.date_naissance || null,
+//         groupe_sanguin: formData.groupe_sanguin || null,
+//         allergies: formData.allergies || null,
+//         antecedents_medicaux: formData.antecedents_medicaux || null,
+//         updated_at: new Date().toISOString()
 //       }
 
-//       // Vérification si l'utilisateur a déjà des infos patient
-//       const { data: existingData } = await supabase
+//       // Vérifier si le patient existe déjà
+//       const { data: existingPatient, error: fetchError } = await supabase
 //         .from('patient_infos')
 //         .select('id')
 //         .eq('user_id', user.id)
 //         .single()
 
-//       if (existingData) {
-//         // Mise à jour des données existantes
-//         const { error } = await supabase
+//       if (existingPatient && !fetchError) {
+//         // Mise à jour
+//         const { error: updateError } = await supabase
 //           .from('patient_infos')
-//           .update(dataToSave)
-//           .eq('user_id', user.id)
+//           .update(patientData)
+//           .eq('id', existingPatient.id)
 
-//         if (error) throw error
+//         if (updateError) throw updateError
 //       } else {
-//         // Création de nouvelles données
-//         const { error } = await supabase
+//         // Création
+//         const { error: insertError } = await supabase
 //           .from('patient_infos')
-//           .insert(dataToSave)
+//           .insert(patientData)
 
-//         if (error) throw error
+//         if (insertError) throw insertError
 //       }
 
-//       toast.success('Profil mis à jour avec succès')
+//       toast.success('Profil patient mis à jour avec succès')
 //       router.push('/patient/dashboard')
-//     } catch (error) {
-//       toast.error('Erreur lors de la mise à jour du profil')
-//       console.error(error)
+//     } catch (error: any) {
+//       console.error('Erreur lors de la mise à jour:', error)
+//       toast.error(`Erreur lors de la mise à jour: ${error.message}`)
 //     } finally {
 //       setSubmitting(false)
 //     }
@@ -123,7 +132,7 @@
 //   if (!user) {
 //     return (
 //       <div className="min-h-screen flex items-center justify-center">
-//         <p>Redirection en cours...</p>
+//         <p>Redirection vers la page de connexion...</p>
 //       </div>
 //     )
 //   }
@@ -160,6 +169,7 @@
 //               value={formData.date_naissance}
 //               onChange={handleChange}
 //               className="w-full p-2 border rounded"
+//               max={new Date().toISOString().split('T')[0]} // Empêche les dates futures
 //               required
 //             />
 //           </div>
@@ -194,7 +204,7 @@
 //             value={formData.allergies}
 //             onChange={handleChange}
 //             className="w-full p-2 border rounded"
-//             rows={2}
+//             rows={3}
 //             placeholder="Ex: Penicilline, Arachides, Pollen..."
 //           />
 //         </div>
@@ -207,7 +217,7 @@
 //             value={formData.antecedents_medicaux}
 //             onChange={handleChange}
 //             className="w-full p-2 border rounded"
-//             rows={4}
+//             rows={5}
 //             placeholder="Décrivez vos antécédents médicaux (maladies chroniques, opérations, etc.)"
 //           />
 //         </div>
@@ -215,9 +225,17 @@
 //         <button
 //           type="submit"
 //           disabled={submitting}
-//           className="bg-blue-600 text-white py-2 px-6 rounded hover:bg-blue-700 disabled:opacity-50"
+//           className="bg-blue-600 text-white py-2 px-6 rounded hover:bg-blue-700 disabled:opacity-50 transition-colors duration-200"
 //         >
-//           {submitting ? 'Enregistrement...' : 'Enregistrer'}
+//           {submitting ? (
+//             <span className="flex items-center justify-center">
+//               <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+//                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+//                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+//               </svg>
+//               Enregistrement...
+//             </span>
+//           ) : 'Enregistrer'}
 //         </button>
 //       </form>
 //     </div>
@@ -231,9 +249,8 @@ import { toast } from 'react-toastify'
 import { supabase } from '@/lib/supabase/client'
 
 export default function CompleterProfilPatient() {
-  const { user, loading: authLoading } = useAuth()
+  const { user } = useAuth()
   const router = useRouter()
-  const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [formData, setFormData] = useState({
     sexe: '',
@@ -244,8 +261,6 @@ export default function CompleterProfilPatient() {
   })
 
   useEffect(() => {
-    if (authLoading) return
-
     if (!user) {
       router.push('/login')
       return
@@ -276,13 +291,11 @@ export default function CompleterProfilPatient() {
       } catch (error: any) {
         console.error('Erreur lors du chargement:', error)
         toast.error(`Erreur lors du chargement des données: ${error.message}`)
-      } finally {
-        setLoading(false)
       }
     }
 
     fetchPatientInfo()
-  }, [user, authLoading, router])
+  }, [user, router])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -344,20 +357,8 @@ export default function CompleterProfilPatient() {
     }
   }
 
-  if (authLoading || loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    )
-  }
-
   if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>Redirection vers la page de connexion...</p>
-      </div>
-    )
+    return null // La redirection est gérée par le useEffect
   }
 
   return (
