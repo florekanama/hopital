@@ -280,14 +280,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('Error fetching profile:', error)
       setUser(null)
       return null
+    } finally {
+      setLoading(false)
     }
   }, [])
 
   useEffect(() => {
+    let mounted = true
+
     const fetchSession = async () => {
-      setLoading(true)
       try {
+        setLoading(true)
         const { data: { session }, error } = await supabase.auth.getSession()
+        
+        if (!mounted) return
         
         if (error) {
           console.error('Session error:', error)
@@ -298,28 +304,48 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           await fetchUserProfile(session.user.id)
         } else {
           setUser(null)
+          setLoading(false)
         }
       } catch (error) {
         console.error('Error fetching session:', error)
-        setUser(null)
-      } finally {
-        setLoading(false)
+        if (mounted) {
+          setUser(null)
+          setLoading(false)
+        }
       }
     }
 
     fetchSession()
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'SIGNED_IN' && session?.user) {
-        setLoading(true)
-        await fetchUserProfile(session.user.id)
-        setLoading(false)
-      } else if (event === 'SIGNED_OUT') {
+      if (!mounted) return
+      
+      setLoading(true)
+      
+      try {
+        if (event === 'SIGNED_IN' && session?.user) {
+          await fetchUserProfile(session.user.id)
+        } else if (event === 'SIGNED_OUT') {
+          setUser(null)
+        } else if (event === 'INITIAL_SESSION') {
+          if (session?.user) {
+            await fetchUserProfile(session.user.id)
+          } else {
+            setUser(null)
+          }
+        }
+      } catch (error) {
+        console.error('Auth state change error:', error)
         setUser(null)
+      } finally {
+        if (mounted) {
+          setLoading(false)
+        }
       }
     })
 
     return () => {
+      mounted = false
       subscription?.unsubscribe()
     }
   }, [fetchUserProfile])
@@ -345,9 +371,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           id: authData.user.id,
           nom,
           email,
-          mot_de_passe: password,
           role,
-          statut: true
+          statut: true,
+          date_creation: new Date().toISOString()
         }])
 
       if (profileError) throw profileError
@@ -424,6 +450,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!user) return { url: null, error: 'Non authentifié' }
 
     try {
+      setLoading(true)
       const fileExt = file.name.split('.').pop()
       const fileName = `${user.id}.${fileExt}`
       const filePath = `${user.id}/${fileName}`
@@ -443,6 +470,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error: any) {
       console.error('Upload error:', error)
       return { url: null, error: error.message }
+    } finally {
+      setLoading(false)
     }
   }
 
